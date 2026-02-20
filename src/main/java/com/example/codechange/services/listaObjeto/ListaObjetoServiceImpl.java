@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ListaObjetoServiceImpl implements IListaObjetoService {
@@ -30,7 +29,7 @@ public class ListaObjetoServiceImpl implements IListaObjetoService {
         ListaObjetoResponseRest response = new ListaObjetoResponseRest();
 
         try {
-            List<com.example.codechange.models.lista.ListaObjeto> listas = (List<com.example.codechange.models.lista.ListaObjeto>) listaObjetoDao.findAll();
+            List<ListaObjeto> listas = (List<ListaObjeto>) listaObjetoDao.findAll();
             response.getListaObjetoResponse().setListasObjeto(listas);
             response.setMetadata("Ok", "00", "Éxito al buscar listas de objetos");
 
@@ -50,10 +49,10 @@ public class ListaObjetoServiceImpl implements IListaObjetoService {
         LOG.info("Buscando lista de objetos por id");
 
         ListaObjetoResponseRest response = new ListaObjetoResponseRest();
-        List<com.example.codechange.models.lista.ListaObjeto> listas = new ArrayList<>();
+        List<ListaObjeto> listas = new ArrayList<>();
 
         try {
-            Optional<com.example.codechange.models.lista.ListaObjeto> listaObjeto = listaObjetoDao.findById(id);
+            Optional<ListaObjeto> listaObjeto = listaObjetoDao.findById(id);
 
             if (listaObjeto.isPresent()) {
                 listas.add(listaObjeto.get());
@@ -80,7 +79,7 @@ public class ListaObjetoServiceImpl implements IListaObjetoService {
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<ListaObjetoResponseRest> getAllByNombre(String nombre) {
-        LOG.info("Buscando lista de objetos por nombre");
+        LOG.info("Buscando todas las listas de objetos por nombre");
 
         ListaObjetoResponseRest response = new ListaObjetoResponseRest();
 
@@ -91,21 +90,21 @@ public class ListaObjetoServiceImpl implements IListaObjetoService {
                     .toList();
             listas.clear();
 
-            if (listasObjetoBuscada.isEmpty()) {
+            if (!listasObjetoBuscada.isEmpty()) {
                 listas.addAll(listasObjetoBuscada);
                 response.getListaObjetoResponse().setListasObjeto(listas);
-                response.setMetadata("Ok", "00", "Éxito al buscar lista de objetos por nombre");
+                response.setMetadata("Ok", "00", "Éxito al buscar todas las listas de objetos por nombre");
 
             } else {
-                LOG.error("Error al buscar listas de objetos por nombre: {}", nombre);
-                response.setMetadata("Error", "-1", "No se encontró lista de objetos con nombre: " + nombre);
+                LOG.error("Error al buscar todas las listas de objetos por nombre: {}", nombre);
+                response.setMetadata("Error", "-1", "No se encontró ninguna lista de objetos con nombre: " + nombre);
 
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
             }
 
         } catch (Exception e) {
-            LOG.error("Error al buscar listas de objetos por nombre {}: {}", nombre, e.getMessage());
-            response.setMetadata("Error", "-1", "Error al buscar listas de objetos");
+            LOG.error("Error al buscar todas las listas de objetos por nombre {}: {}", nombre, e.getMessage());
+            response.setMetadata("Error", "-1", "Error al buscar todas las listas de objetos con nombre");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -214,30 +213,33 @@ public class ListaObjetoServiceImpl implements IListaObjetoService {
 
     @Override
     @Transactional
-    public ResponseEntity<ListaObjetoResponseRest> deleteByNombre(String nombre) {
-        LOG.info("Eliminando lista de objetos con nombre: {}", nombre);
+    public ResponseEntity<ListaObjetoResponseRest> deleteAllByNombre(String nombre) {
+        LOG.info("Eliminando todas las listas de objetos con nombre: {}", nombre);
 
         ListaObjetoResponseRest response = new ListaObjetoResponseRest();
 
         try {
             List<ListaObjeto> listas = (List<ListaObjeto>) listaObjetoDao.findAll();
-            Optional<ListaObjeto> listaObjetoBuscada = listas.stream().filter(listaObjeto -> listaObjeto.getNombre().equals(nombre)).findFirst();
+            List<ListaObjeto> listasObjetoBuscada = listas.stream().
+                    filter(listaObjeto -> listaObjeto.getNombre().equals(nombre))
+                    .toList();
+            listas.clear();
 
 
-            if (listaObjetoBuscada.isPresent()) {
-                listaObjetoDao.delete(listaObjetoBuscada.get());
-                response.setMetadata("Ok", "00", "Éxito al eliminar lista de objetos");
+            if (!listasObjetoBuscada.isEmpty()) {
+                listaObjetoDao.deleteAll(listasObjetoBuscada);
+                response.setMetadata("Ok", "00", "Éxito al eliminar todas las listas de objetos");
 
             } else {
-                LOG.error("Error al buscar listas de objetos por nombre: {}", nombre);
-                response.setMetadata("Error", "-1", "No se encontró lista de objetos con nombre: " + nombre);
+                LOG.error("Error al buscar las listas de objetos por nombre: {}", nombre);
+                response.setMetadata("Error", "-1", "No se encontró ninguna lista de objetos con nombre: " + nombre);
 
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
             }
 
         } catch (Exception e) {
-            LOG.error("Error al eliminar listas de objetos con nombre {}: {}", nombre, e.getMessage());
-            response.setMetadata("Error", "-1", "Error al eliminar listas de objetos");
+            LOG.error("Error al eliminar todas las listas de objetos con nombre {}: {}", nombre, e.getMessage());
+            response.setMetadata("Error", "-1", "Error al eliminar todas las listas de objetos por nombre");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -47,6 +47,6 @@ public class ListaObjetoRestController {
 
     @DeleteMapping("/nombre/{nombre}")
     private ResponseEntity<ListaObjetoResponseRest> deleteByNombre(@PathVariable String nombre) {
-        return service.deleteByNombre(nombre);
+        return service.deleteAllByNombre(nombre);
     }
 }

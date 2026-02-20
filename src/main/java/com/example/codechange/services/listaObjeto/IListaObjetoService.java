@@ -17,5 +17,5 @@ public interface IListaObjetoService {
 
     ResponseEntity<ListaObjetoResponseRest> deleteById(Long id);
 
-    ResponseEntity<ListaObjetoResponseRest> deleteByNombre(String nombre);
+    ResponseEntity<ListaObjetoResponseRest> deleteAllByNombre(String nombre);
 }
