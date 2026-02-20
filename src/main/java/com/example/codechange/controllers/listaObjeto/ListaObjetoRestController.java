@@ -14,7 +14,7 @@ public class ListaObjetoRestController {
     private IListaObjetoService service;
 
     @GetMapping("/")
-    private ResponseEntity<ListaObjetoResponseRest> get() {
+    private ResponseEntity<ListaObjetoResponseRest> getAll() {
         return service.getAll();
     }
 
@@ -24,7 +24,7 @@ public class ListaObjetoRestController {
     }
 
     @GetMapping("/nombre/{nombre}")
-    private ResponseEntity<ListaObjetoResponseRest> getByNombre(@PathVariable String nombre) {
+    private ResponseEntity<ListaObjetoResponseRest> getAllByNombre(@PathVariable String nombre) {
         return service.getAllByNombre(nombre);
     }
 
@@ -34,9 +34,7 @@ public class ListaObjetoRestController {
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity<ListaObjetoResponseRest> update(
-            @PathVariable Long id, @RequestBody ListaObjeto lista
-    ) {
+    private ResponseEntity<ListaObjetoResponseRest> update(@PathVariable Long id, @RequestBody ListaObjeto lista) {
         return service.update(id, lista);
     }
 
@@ -45,8 +43,8 @@ public class ListaObjetoRestController {
         return service.deleteById(id);
     }
 
-    @DeleteMapping("/nombre/{nombre}")
-    private ResponseEntity<ListaObjetoResponseRest> deleteByNombre(@PathVariable String nombre) {
+    @DeleteMapping("/todos-nombre/{nombre}")
+    private ResponseEntity<ListaObjetoResponseRest> deleteAllByNombre(@PathVariable String nombre) {
         return service.deleteAllByNombre(nombre);
     }
 }
