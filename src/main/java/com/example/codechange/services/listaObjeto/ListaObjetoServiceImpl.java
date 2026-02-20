@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ListaObjetoServiceImpl implements IListaObjetoService {
@@ -23,7 +24,7 @@ public class ListaObjetoServiceImpl implements IListaObjetoService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<ListaObjetoResponseRest> get() {
+    public ResponseEntity<ListaObjetoResponseRest> getAll() {
         LOG.info("Buscando listas de objetos");
 
         ListaObjetoResponseRest response = new ListaObjetoResponseRest();
@@ -78,18 +79,20 @@ public class ListaObjetoServiceImpl implements IListaObjetoService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<ListaObjetoResponseRest> getByNombre(String nombre) {
+    public ResponseEntity<ListaObjetoResponseRest> getAllByNombre(String nombre) {
         LOG.info("Buscando lista de objetos por nombre");
 
         ListaObjetoResponseRest response = new ListaObjetoResponseRest();
 
         try {
             List<ListaObjeto> listas = (List<ListaObjeto>) listaObjetoDao.findAll();
-            Optional<ListaObjeto> listaObjetoBuscada = listas.stream().filter(listaObjeto -> listaObjeto.getNombre().equals(nombre)).findFirst();
+            List<ListaObjeto> listasObjetoBuscada = listas.stream().
+                    filter(listaObjeto -> listaObjeto.getNombre().equals(nombre))
+                    .toList();
             listas.clear();
 
-            if (listaObjetoBuscada.isPresent()) {
-                listas.add(listaObjetoBuscada.get());
+            if (listasObjetoBuscada.isEmpty()) {
+                listas.addAll(listasObjetoBuscada);
                 response.getListaObjetoResponse().setListasObjeto(listas);
                 response.setMetadata("Ok", "00", "Éxito al buscar lista de objetos por nombre");
 

@@ -15,7 +15,7 @@ public class ListaObjetoRestController {
 
     @GetMapping("/")
     private ResponseEntity<ListaObjetoResponseRest> get() {
-        return service.get();
+        return service.getAll();
     }
 
     @GetMapping("/id/{id}")
@@ -25,7 +25,7 @@ public class ListaObjetoRestController {
 
     @GetMapping("/nombre/{nombre}")
     private ResponseEntity<ListaObjetoResponseRest> getByNombre(@PathVariable String nombre) {
-        return service.getByNombre(nombre);
+        return service.getAllByNombre(nombre);
     }
 
     @PostMapping("/")

@@ -5,11 +5,11 @@ import com.example.codechange.responses.listaObjeto.ListaObjetoResponseRest;
 import org.springframework.http.ResponseEntity;
 
 public interface IListaObjetoService {
-    ResponseEntity<ListaObjetoResponseRest> get();
+    ResponseEntity<ListaObjetoResponseRest> getAll();
 
     ResponseEntity<ListaObjetoResponseRest> getById(Long id);
 
-    ResponseEntity<ListaObjetoResponseRest> getByNombre(String nombre);
+    ResponseEntity<ListaObjetoResponseRest> getAllByNombre(String nombre);
 
     ResponseEntity<ListaObjetoResponseRest> save(ListaObjeto listaObjeto);
 
