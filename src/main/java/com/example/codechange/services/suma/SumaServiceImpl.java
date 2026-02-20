@@ -26,7 +26,7 @@ public class SumaServiceImpl implements ISumaService {
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<SumaResponseRest> buscarPorReferencia(String referencia) {
-        LOG.info("Buscando suma por referencia {}:", referencia);
+        LOG.info("Buscando suma con referencia {}:", referencia);
 
         SumaResponseRest response = new SumaResponseRest();
         List<Suma> sumas = new ArrayList<>();
@@ -37,17 +37,17 @@ public class SumaServiceImpl implements ISumaService {
             if (suma.isPresent()) {
                 sumas.add(suma.get());
                 response.getSumaResponse().setSumas(sumas);
-                response.setMetadata("Ok", "00", "Éxito al buscar suma por referencia");
+                response.setMetadata("Ok", "00", "Éxito al buscar suma con referencia: " + referencia);
 
             } else {
-                LOG.error("Error al buscar suma por referencia {}:", referencia);
-                response.setMetadata("Error", "-1", "Error al buscar suma por referencia");
+                LOG.error("Error al buscar suma con referencia {}:", referencia);
+                response.setMetadata("Error", "-1", "Error al buscar suma con referencia: " + referencia);
 
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
             }
 
         } catch (Exception e) {
-            LOG.error("Error al buscar suma por referencia {}: {}", referencia, e.getMessage());
+            LOG.error("Error al buscar suma con referencia {}: {}", referencia, e.getMessage());
             response.setMetadata("Error", "-1", "Error al buscar suma por referencia");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -74,7 +74,7 @@ public class SumaServiceImpl implements ISumaService {
 
                 } else {
                     LOG.info("No hay suma mayor que {}", sumaEntradaMayorQue.getMayorQue());
-                    response.setMetadata("Éxito", "00", "No hay suma mayor que");
+                    response.setMetadata("Éxito", "00", "No hay suma mayor que " + sumaEntradaMayorQue.getMayorQue());
 
                     return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
                 }

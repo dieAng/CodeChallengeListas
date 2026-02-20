@@ -3,10 +3,15 @@ package com.example.codechange.controllers.suma;
 import com.example.codechange.models.suma.SumaEntradaMayorQue;
 import com.example.codechange.responses.suma.SumaResponseRest;
 import com.example.codechange.services.suma.ISumaService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(
+        name = "API Rest para sumas (ejercicio Code Challenge)",
+        description = "Esta API se encarga de mostrar sumas registradas en una base de datos."
+)
 @RestController
 @RequestMapping("/sumas")
 public class SumaRestController {
